@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Data
-public class GameVO {
-
+public class Game {
     private int gameId;
     private String name;
     private String developer;

@@ -1,15 +1,15 @@
 package kr.ac.jejunu.giftrestserver;
 
-import kr.ac.jejunu.giftrestserver.dao.GiftDAO;
-import kr.ac.jejunu.giftrestserver.vo.GameVO;
+import kr.ac.jejunu.giftrestserver.dao.GameDao;
+import kr.ac.jejunu.giftrestserver.vo.Game;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -25,7 +25,7 @@ public class DaoTest {
     private MockMvc mvc;
 
     @Autowired
-    GiftDAO giftDAO;
+    GameDao gameDao;
 
     @Test
     public void exampleTest() throws Exception {
@@ -36,22 +36,27 @@ public class DaoTest {
     }
 
     @Test
-    public void getGameList() throws Exception {
-//
-//        gameVO.setCategory("FPS");
-//        gameVO.setName("이거 가능?");
-//        gameVO.setDeveloper("Aerain");
-//        gameVO.setSuccess(false);
-//        gameVO.setCurrentPrice(0);
-//        gameVO.setGoalPrice(1000000);
-//
-//        int id = testDAO.insertGame(gameVO);
-//
-//        GameVO testGameVO = testDAO.getGameFromId(id);
-//        if(testGameVO.getGameId() != id) throw
-
-        this.mvc.perform(get("/game"))
+    public void getGame() throws Exception {
+        this.mvc.perform(get("/game/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("hello!"))
+                .andExpect(content().string(
+                        "{\"code\":200,\"data\":{\"gameId\":1,\"name\":\"silhwa\",\"developer\":\"aerain\",\"category\":\"fps\",\"currentPrice\":0,\"goalPrice\":0,\"success\":false},\"messages\":\"success\"}"
+                ));
+    }
+
+    @Test
+    public void insertGame() throws Exception {
+        Game game = new Game();
+        game.setName("tee");
+        game.setDeveloper("tes");
+        game.setCategory("fps");
+        game.setGoalPrice(50000000);
+
+
+        this.mvc.perform(put("/game/insert")
+                        .contentType("application/json")
+                        .characterEncoding("UTF-8").content("{\"name\":\"tee\",\"developer\":\"tes\",\"category\":\"fps\",\"goalPrice\":5000000}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"code\":200,\"message\":\"Successfully added\"}"));
     }
 }

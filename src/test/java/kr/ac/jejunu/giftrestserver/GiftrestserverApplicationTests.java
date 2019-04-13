@@ -11,6 +11,7 @@ public class GiftrestserverApplicationTests {
 
     @Test
     public void contextLoads() {
+        System.out.println("Hi!");
     }
 
 }
