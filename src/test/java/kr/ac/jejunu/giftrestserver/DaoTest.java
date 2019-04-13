@@ -46,13 +46,6 @@ public class DaoTest {
 
     @Test
     public void insertGame() throws Exception {
-        Game game = new Game();
-        game.setName("tee");
-        game.setDeveloper("tes");
-        game.setCategory("fps");
-        game.setGoalPrice(50000000);
-
-
         this.mvc.perform(put("/game/insert")
                         .contentType("application/json")
                         .characterEncoding("UTF-8").content("{\"name\":\"tee\",\"developer\":\"tes\",\"category\":\"fps\",\"goalPrice\":5000000}"))

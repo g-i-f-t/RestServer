@@ -2,6 +2,7 @@ package kr.ac.jejunu.giftrestserver.controller;
 
 import kr.ac.jejunu.giftrestserver.dao.GameDao;
 import kr.ac.jejunu.giftrestserver.vo.Game;
+import kr.ac.jejunu.giftrestserver.vo.GameMinify;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class GameController {
 
     @GetMapping(value="/game")
     public Map<String, Object> getGameList() {
-        Collection<Game> collection = gameDao.getGameCollection();
+        Collection<GameMinify> collection = gameDao.getGameCollection();
         Map<String, Object> res = new HashMap<>();
 
         res.put("code", 200);

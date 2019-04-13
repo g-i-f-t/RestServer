@@ -1,6 +1,7 @@
 package kr.ac.jejunu.giftrestserver.dao;
 
 import kr.ac.jejunu.giftrestserver.vo.Game;
+import kr.ac.jejunu.giftrestserver.vo.GameMinify;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,10 +40,10 @@ public class GameDao {
         return jdbcTemplate.update(sql, params);
     }
 
-    public Collection<Game> getGameCollection() {
+    public Collection<GameMinify> getGameCollection() {
         String sql = "SELECT game_id, name, developer, category, Success, current_price, goal_price FROM game_info";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Game game = new Game();
+            GameMinify game = new GameMinify();
             game.setGameId(rs.getInt("game_id"));
             game.setName(rs.getString("name"));
             game.setDeveloper(rs.getString("developer"));
@@ -64,9 +65,13 @@ public class GameDao {
                 game.setName(rs.getString("name"));
                 game.setDeveloper(rs.getString("developer"));
                 game.setCategory(rs.getString("category"));
-                game.setSuccess(rs.getBoolean("Success"));
+                game.setSuccess(rs.getBoolean("success"));
                 game.setCurrentPrice(rs.getInt("current_price"));
                 game.setGoalPrice(rs.getInt("goal_price"));
+                game.setGameInformation(rs.getString("game_information"));
+                game.setInvestigationInformation(rs.getString("investigation_information"));
+                game.setInvestigationCondition(rs.getString("investigation_condition"));
+                game.setCompanyIntroduction(rs.getString("company_introduction"));
 
                 return game;
             });
