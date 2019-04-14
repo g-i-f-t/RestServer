@@ -14,4 +14,11 @@ public class GiftrestserverApplicationTests {
         System.out.println("Hi!");
     }
 
+    @Test
+    public void bankTest() {
+        BankService test = new BankService();
+        String t = test.addUser();
+        System.out.println(t);
+    }
+
 }

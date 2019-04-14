@@ -40,7 +40,7 @@ public class DaoTest {
         this.mvc.perform(get("/game/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(
-                        "{\"code\":200,\"data\":{\"gameId\":1,\"name\":\"silhwa\",\"developer\":\"aerain\",\"category\":\"fps\",\"currentPrice\":0,\"goalPrice\":0,\"success\":false},\"messages\":\"success\"}"
+                        "{\"code\":200,\"data\":{\"gameId\":1,\"name\":\"silhwa\",\"developer\":\"aerain\",\"category\":\"fps\",\"currentPrice\":0,\"goalPrice\":0,\"success\":false,\"gameInformation\":\"\",\"investigationInformation\":\"\",\"investigationCondition\":\"\",\"companyIntroduction\":\"\"},\"messages\":\"success\"}"
                 ));
     }
 
@@ -48,7 +48,8 @@ public class DaoTest {
     public void insertGame() throws Exception {
         this.mvc.perform(put("/game/insert")
                         .contentType("application/json")
-                        .characterEncoding("UTF-8").content("{\"name\":\"tee\",\"developer\":\"tes\",\"category\":\"fps\",\"goalPrice\":5000000}"))
+                        .characterEncoding("UTF-8").content(
+                                "{\"name\":\"tee\",\"developer\":\"tes\",\"category\":\"fps\",\"goalPrice\":5000000, \"gameInformation\": \"test\", \"investigationInformation\": \"inveinfo\", \"investigationCondition\": \"invecon\", \"companyIntroduction\": \"comIn\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("{\"code\":200,\"message\":\"Successfully added\"}"));
     }

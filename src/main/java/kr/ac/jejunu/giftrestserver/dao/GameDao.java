@@ -3,6 +3,7 @@ package kr.ac.jejunu.giftrestserver.dao;
 import kr.ac.jejunu.giftrestserver.vo.Game;
 import kr.ac.jejunu.giftrestserver.vo.GameMinify;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,24 +35,39 @@ public class GameDao {
     }
 
     public int insertGame(Game game) {
-        String sql = "insert into game_info (name, developer, category, current_price, goal_price, success) values (?, ?, ?, ?, ?, ?)";
-        Object[] params = new Object[] { game.getName(), game.getDeveloper(), game.getCategory(),
-                game.getCurrentPrice(), game.getGoalPrice(), game.isSuccess() };
+        String sql = "insert into game_info (name, developer, category, current_price, goal_price, game_information, investigation_information, investigation_condition, company_introduction) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Object[] params = new Object[] {
+                game.getName(),
+                game.getDeveloper(),
+                game.getCategory(),
+                game.getCurrentPrice(),
+                game.getGoalPrice(),
+                game.getGameInformation(),
+                game.getInvestigationInformation(),
+                game.getInvestigationCondition(),
+                game.getCompanyIntroduction() };
+
         return jdbcTemplate.update(sql, params);
     }
 
     public Collection<GameMinify> getGameCollection() {
         String sql = "SELECT game_id, name, developer, category, Success, current_price, goal_price FROM game_info";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            GameMinify game = new GameMinify();
-            game.setGameId(rs.getInt("game_id"));
-            game.setName(rs.getString("name"));
-            game.setDeveloper(rs.getString("developer"));
-            game.setCategory(rs.getString("category"));
-            game.setCurrentPrice(rs.getInt("current_price"));
-            game.setGoalPrice(rs.getInt("goal_price"));
-            return game;
-        });
+        Collection<GameMinify> gameMinifyCollection = null;
+        try {
+            jdbcTemplate.query(sql, (rs, rowNum) -> {
+               GameMinify game = new GameMinify();
+               game.setGameId(rs.getInt("game_id"));
+               game.setName(rs.getString("name"));
+               game.setDeveloper(rs.getString("developer"));
+               game.setCategory(rs.getString("category"));
+               game.setCurrentPrice(rs.getInt("current_price"));
+               game.setGoalPrice(rs.getInt("goal_price"));
+               return game;
+           });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return gameMinifyCollection;
     }
 
     public Game getGameFromId(Long id) {
