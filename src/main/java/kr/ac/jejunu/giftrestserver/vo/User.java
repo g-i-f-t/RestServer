@@ -8,5 +8,9 @@ public class User {
     private String id;
     private String name;
     private String password;
-    private String payAccount;
+    private String birthGender;
+    private String email;
+    private String refreshToken;
+    private String userSeqId;
+    private String scope;
 }

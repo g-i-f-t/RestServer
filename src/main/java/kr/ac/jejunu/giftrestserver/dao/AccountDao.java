@@ -12,8 +12,8 @@ public class AccountDao {
     JdbcTemplate jdbcTemplate;
 
     public int addAccount(Account account) {
-        String sql = "INSERT INTO account_info (userId, scope, code) VALUES (?, ?, ?)";
-        Object[] params = new Object[] { account.getClientInfo(), account.getScope(), account.getCode() };
+        String sql = "INSERT INTO account_info (userId, fintech_account_num, scope, client_info) VALUES (?, ?, ?, ?)";
+        Object[] params = new Object[] { account.getClientInfo(), account.getFintechAccountNum(), account.getScope(), account.getClientInfo() };
         return jdbcTemplate.update(sql, params);
     }
 }
