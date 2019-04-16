@@ -1,6 +1,7 @@
 package kr.ac.jejunu.giftrestserver;
 
 import kr.ac.jejunu.giftrestserver.dao.GameDao;
+import kr.ac.jejunu.giftrestserver.vo.Account;
 import kr.ac.jejunu.giftrestserver.vo.Game;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,4 +54,6 @@ public class DaoTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("{\"code\":200,\"message\":\"Successfully added\"}"));
     }
+
+
 }
