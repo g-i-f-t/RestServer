@@ -41,8 +41,7 @@ public class AuthController {
             @RequestBody String birthGender,
             @RequestBody String email,
             @RequestBody String authCode,
-            @RequestBody String scope,
-            @RequestBody String clientInfo) {
+            @RequestBody String scope) {
 //        new AccountDao().addAccount(account);
 
         Map<String, Object> tokenRes = bankService.getToken(authCode);
