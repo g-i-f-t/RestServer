@@ -12,7 +12,7 @@ public class UserDao {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    public void createUser(User user) {
+    public int createUser(User user) {
         // Todo
         String sql = "INSERT INTO user_info (id, password, name, birth_gender, email, scope, refresh_token, user_seq_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Object[] params = new Object[]
@@ -25,7 +25,9 @@ public class UserDao {
                 user.getScope(),
                 user.getRefreshToken(),
                 user.getUserSeqId()
-        }
+        };
+
+        return jdbcTemplate.update(sql, params);
     }
 
     /**
