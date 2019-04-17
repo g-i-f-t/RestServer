@@ -61,12 +61,20 @@ public class AuthController {
         user.setRefreshToken(refreshToken);
         user.setUserSeqId(userSeqNo);
 
-        userdao.createUser(user);
-
         Map<String, Object> res = new HashMap<>();
+
+        try {
+            userdao.createUser(user);
+        } catch(Exception e) {
+            res.put("code", 400);
+            res.put("messages", "add failed");
+        }
+
+
         res.put("code", 200);
         res.put("messages", "success");
         res.put("access_token", accessToken);
+        res.put("user_seq_no", userSeqNo);
         return res;
     }
 }
