@@ -35,11 +35,9 @@ public class AuthController {
 
     @PostMapping(value="/addAccount", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Map<String, Object> addAccount(
-            @RequestBody String id,
+            @RequestBody String email,
             @RequestBody String password,
             @RequestBody String name,
-            @RequestBody String birthGender,
-            @RequestBody String email,
             @RequestBody String authCode,
             @RequestBody String scope) {
 //        new AccountDao().addAccount(account);
@@ -52,10 +50,8 @@ public class AuthController {
 
         User user = new User();
 
-        user.setId(id);
         user.setPassword(password);
         user.setName(name);
-        user.setBirthGender(birthGender);
         user.setEmail(email);
         user.setScope(scope);
         user.setRefreshToken(refreshToken);
