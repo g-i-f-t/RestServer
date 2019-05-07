@@ -1,7 +1,9 @@
 package kr.ac.jejunu.giftrestserver.dao;
 
+import kr.ac.jejunu.giftrestserver.vo.Profile;
 import kr.ac.jejunu.giftrestserver.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,13 +16,11 @@ public class UserDao {
 
     public int createUser(User user) {
         // Todo
-        String sql = "INSERT INTO user_info (id, password, name, birth_gender, email, scope, refresh_token, user_seq_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO user_info (password, name, email, scope, refresh_token, user_seq_id) VALUES (?, ?, ?, ?, ?, ?)";
         Object[] params = new Object[]
                 {
-                user.getId(),
                 user.getPassword(),
                 user.getName(),
-                user.getBirthGender(),
                 user.getEmail(),
                 user.getScope(),
                 user.getRefreshToken(),
@@ -41,9 +41,7 @@ public class UserDao {
         String sql = "SELECT * FROM user_info WHERE id = ? and password = ?";
         Object[] params = new Object[] { id, password };
         try {
-            responseId = jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> {
-                return rs.getLong("num");
-            });
+            responseId = jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> rs.getLong("num"));
         } catch (EmptyResultDataAccessException e) {
             e.printStackTrace();
         }
@@ -58,5 +56,19 @@ public class UserDao {
     public void deleteUser() {
         String sql = "DELETE FROM user_info WHERE id = ?";
         // Todo
+    }
+
+    public Profile getAccountFromUserSeqId(String userSeqId) {
+        String sql = "SELECT name, email from user_info where user_seq_id = ?";
+        Object[] params = new Object[] {userSeqId};
+        Profile profile = null;
+        try {
+            profile = jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> new Profile() {{
+                setName(rs.getString("name"));
+                setEmail(rs.getString("email"));
+            }});
+        } catch (EmptyResultDataAccessException e) { e.printStackTrace(); }
+        System.out.println(profile.getName());
+        return profile;
     }
 }

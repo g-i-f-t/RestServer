@@ -17,10 +17,21 @@ public class GameController {
     private GameDao gameDao;
 
     @GetMapping(value="/game")
-    public Map<String, Object> getGameList() {
-        Collection<GameMinify> collection = gameDao.getGameCollection();
+    public Map<String, Object> getGameList(@RequestParam String list) {
         Map<String, Object> res = new HashMap<>();
-
+        Collection<GameMinify> collection = null;
+        switch(list) {
+            case "available":
+                collection = gameDao.getGameCollection(true);
+                break;
+            case "done":
+                collection = gameDao.getGameCollection(false);
+                break;
+            default:
+                res.put("code", 400);
+                res.put("messages", "unavailable list name.");
+                return res;
+        }
         res.put("code", 200);
         res.put("messages", "success");
         res.put("data", collection);
