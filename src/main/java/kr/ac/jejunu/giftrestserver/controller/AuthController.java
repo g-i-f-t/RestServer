@@ -34,8 +34,23 @@ public class AuthController {
     }
 
     @PostMapping(value="/validateAccount")
-    public void validateAccount(@RequestBody ValidateVO account) {
-        System.out.println(account.getEmail());
+    public Map<String, Object> validateAccount(@RequestBody ValidateVO account) {
+        Map<String, Object> res = new HashMap<>();
+        RefreshVO refreshVO = userdao.authUser(account);
+        if(refreshVO == null) {
+            res.put("code", 400);
+            res.put("messages", "couldn't find account");
+            return res;
+        }
+        Map<String, Object> response = bankService.updateToken(refreshVO.getRefreshToken(), refreshVO.getScope());
+        String accessToken = (String) response.get("access_token");
+        String refreshToken = (String) response.get("refresh_token");
+        userdao.updateUserForTokenUpdate(refreshToken, refreshVO.getUserSeqNo());
+        res.put("code", 200);
+        res.put("messages", "success");
+        res.put("access_token", accessToken);
+        res.put("user_seq_no", refreshVO.getUserSeqNo());
+        return res;
     }
 
     @GetMapping(value="/account/{user_seq_id}")
@@ -44,12 +59,12 @@ public class AuthController {
         Profile profile = userdao.getAccountFromUserSeqId(userSeqId);
 
         if(profile == null) {
-            res.put("code", "400");
+            res.put("code", 400);
             res.put("messages", "account not founded");
             return res;
         }
 
-        res.put("code", "200");
+        res.put("code", 200);
         res.put("messages", "success");
         res.put("data", profile);
         return null;

@@ -1,7 +1,9 @@
 package kr.ac.jejunu.giftrestserver.dao;
 
 import kr.ac.jejunu.giftrestserver.vo.Profile;
+import kr.ac.jejunu.giftrestserver.vo.RefreshVO;
 import kr.ac.jejunu.giftrestserver.vo.User;
+import kr.ac.jejunu.giftrestserver.vo.ValidateVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -31,22 +33,24 @@ public class UserDao {
     }
 
     /**
-     * readUser
-     * @param id 사용자 아이디
-     * @param password  SHA-256 처리된 패스워드
-     * @return 사용자 번호 반환
+     *
+     * @param validateVO
+     * @return
      */
-    public Long authUser(String id, String password) {
-        Long responseId = null;
-        String sql = "SELECT * FROM user_info WHERE id = ? and password = ?";
-        Object[] params = new Object[] { id, password };
+    public RefreshVO authUser(ValidateVO validateVO) {
+        RefreshVO refreshVO= null;
+        String sql = "SELECT refresh_token, scope, user_seq_id FROM user_info WHERE email = ? and password = ?";
+        Object[] params = new Object[] { validateVO.getEmail(), validateVO.getPassword() };
         try {
-            responseId = jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> rs.getLong("num"));
+            refreshVO = jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> new RefreshVO() {{
+                setRefreshToken(rs.getString("refresh_token"));
+                setScope(rs.getString("scope"));
+                setUserSeqNo(rs.getString("user_seq_id"));
+            }});
         } catch (EmptyResultDataAccessException e) {
-            e.printStackTrace();
         }
 
-        return responseId;
+        return refreshVO;
     }
 
     public void updateUser() {
@@ -70,5 +74,11 @@ public class UserDao {
         } catch (EmptyResultDataAccessException e) { e.printStackTrace(); }
         System.out.println(profile.getName());
         return profile;
+    }
+
+    public void updateUserForTokenUpdate(String refreshToken, String userSeqNo) {
+        String sql = "UPDATE user_info SET refresh_token=? WHERE user_seq_id=?";
+        Object[] params = new Object[] { refreshToken, userSeqNo };
+        jdbcTemplate.update(sql, params);
     }
 }
