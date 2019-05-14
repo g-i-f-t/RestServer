@@ -14,7 +14,8 @@ public class Game extends GameMinify {
     private int goalPrice;
     private boolean success;
     private String gameInformation;
-    private String investigationInformation;
-    private String investigationCondition;
+    private String investmentInformation;
+    private String investmentCondition;
     private String companyIntroduction;
+    private String profileImage;
 }

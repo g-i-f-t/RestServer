@@ -72,7 +72,6 @@ public class UserDao {
                 setEmail(rs.getString("email"));
             }});
         } catch (EmptyResultDataAccessException e) { e.printStackTrace(); }
-        System.out.println(profile.getName());
         return profile;
     }
 

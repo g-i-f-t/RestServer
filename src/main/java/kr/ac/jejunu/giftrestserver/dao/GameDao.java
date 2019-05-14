@@ -32,7 +32,7 @@ public class GameDao {
     }
 
     public int insertGame(Game game) {
-        String sql = "insert into game_info (name, developer, category, current_price, goal_price, game_information, investigation_information, investigation_condition, company_introduction) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into game_info (name, developer, category, current_price, goal_price, game_information, investigation_information, investigation_condition, company_introduction, profile_image) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Object[] params = new Object[] {
                 game.getName(),
                 game.getDeveloper(),
@@ -40,9 +40,10 @@ public class GameDao {
                 game.getCurrentPrice(),
                 game.getGoalPrice(),
                 game.getGameInformation(),
-                game.getInvestigationInformation(),
-                game.getInvestigationCondition(),
-                game.getCompanyIntroduction() };
+                game.getInvestmentInformation(),
+                game.getInvestmentCondition(),
+                game.getCompanyIntroduction(),
+                game.getProfileImage()};
 
         return jdbcTemplate.update(sql, params);
     }
@@ -60,6 +61,7 @@ public class GameDao {
                game.setCategory(rs.getString("category"));
                game.setCurrentPrice(rs.getInt("current_price"));
                game.setGoalPrice(rs.getInt("goal_price"));
+               game.setProfileImage(rs.getString("profile_image"));
                return game;
            });
         } catch (DataAccessException e) {
@@ -83,9 +85,10 @@ public class GameDao {
                 game.setCurrentPrice(rs.getInt("current_price"));
                 game.setGoalPrice(rs.getInt("goal_price"));
                 game.setGameInformation(rs.getString("game_information"));
-                game.setInvestigationInformation(rs.getString("investigation_information"));
-                game.setInvestigationCondition(rs.getString("investigation_condition"));
+                game.setInvestmentInformation(rs.getString("investigation_information"));
+                game.setInvestmentCondition(rs.getString("investigation_condition"));
                 game.setCompanyIntroduction(rs.getString("company_introduction"));
+                game.setProfileImage(rs.getString("profile_image"));
 
                 return game;
             });

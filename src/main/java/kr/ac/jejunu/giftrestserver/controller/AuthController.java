@@ -66,8 +66,9 @@ public class AuthController {
 
         res.put("code", 200);
         res.put("messages", "success");
-        res.put("data", profile);
-        return null;
+        res.put("name", profile.getName());
+        res.put("email", profile.getEmail());
+        return res;
     }
 
     @PostMapping(value="/addAccount", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -79,11 +80,22 @@ public class AuthController {
 //            @RequestBody String scope) {
 //        new AccountDao().addAccount(account);
 
+        Map<String, Object> res = new HashMap<>();
         Map<String, Object> tokenRes = bankService.getToken(userAddVo.getAuthCode());
 
         final String accessToken = (String) tokenRes.get("access_token");
         final String refreshToken = (String) tokenRes.get("refresh_token");
         final String userSeqNo = (String) tokenRes.get("user_seq_no");
+
+        Profile profile = userdao.getAccountFromUserSeqId(userSeqNo);
+        if(profile != null) {
+            userdao.updateUserForTokenUpdate(refreshToken, userSeqNo);
+            res.put("code", 401);
+            res.put("messages", "account already exists");
+            res.put("access_token", null);
+            res.put("user_seq_no", null);
+            return res;
+        }
 
         User user = new User();
 
@@ -94,7 +106,7 @@ public class AuthController {
         user.setRefreshToken(refreshToken);
         user.setUserSeqId(userSeqNo);
 
-        Map<String, Object> res = new HashMap<>();
+
 
         try {
             userdao.createUser(user);

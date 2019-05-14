@@ -11,4 +11,5 @@ public class GameMinify {
     private int currentPrice;
     private int goalPrice;
     private boolean success;
+    private String profileImage;
 }
