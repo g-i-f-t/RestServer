@@ -2,16 +2,15 @@ package kr.ac.jejunu.giftrestserver.dao;
 
 import kr.ac.jejunu.giftrestserver.vo.Game;
 import kr.ac.jejunu.giftrestserver.vo.GameMinify;
+import kr.ac.jejunu.giftrestserver.vo.PurchaseTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.ResultSet;
+import java.util.*;
 
 @Repository
 public class GameDao {
@@ -50,7 +49,7 @@ public class GameDao {
 
     public Collection<GameMinify> getGameCollection(boolean isAvailable) {
 
-        String sql = "SELECT game_id, name, developer, category, Success, current_price, goal_price FROM game_info WHERE success = " + (isAvailable ? '0' : '1');
+        String sql = "SELECT game_id, name, developer, category, Success, current_price, goal_price, profile_image FROM game_info WHERE success = " + (isAvailable ? '0' : '1');
         Collection<GameMinify> gameMinifyCollection = null;
         try {
             gameMinifyCollection = jdbcTemplate.query(sql, (rs, rowNum) -> {
@@ -72,6 +71,7 @@ public class GameDao {
 
     public Game getGameFromId(Long id) {
         String sql = "SELECT * FROM game_info WHERE game_id=?";
+        String sqlDescribe = "SELECT describe_image FROM game_describe_image WHERE game_id = ?";
         Object[] params = new Object[] { id };
         Game result = null;
         try {
@@ -92,7 +92,16 @@ public class GameDao {
 
                 return game;
             });
+
+            assert result != null;
+            result.setDescribeImageList(jdbcTemplate.query(sqlDescribe, params, (rs, rowNum) -> rs.getString(1)));
         } catch (EmptyResultDataAccessException e) { e.printStackTrace(); }
         return result;
+    }
+
+    public void fundGame(Game game) {
+        String sql = "UPDATE game_info SET current_price = ? WHERE game_id = ?";
+        Object[] params = new Object[] { game.getCurrentPrice(), game.getGameId() };
+        jdbcTemplate.update(sql, params);
     }
 }

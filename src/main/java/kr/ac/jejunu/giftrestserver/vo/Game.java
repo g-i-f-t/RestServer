@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Data
 public class Game extends GameMinify {
     private int gameId;
@@ -18,4 +20,5 @@ public class Game extends GameMinify {
     private String investmentCondition;
     private String companyIntroduction;
     private String profileImage;
+    private List<String> describeImageList;
 }
