@@ -1,7 +1,6 @@
 package kr.ac.jejunu.giftrestserver.controller;
 
 import kr.ac.jejunu.giftrestserver.model.User;
-import kr.ac.jejunu.giftrestserver.payload.RefreshPayload;
 import kr.ac.jejunu.giftrestserver.payload.UserAddPayload;
 import kr.ac.jejunu.giftrestserver.payload.ValidatePayload;
 import kr.ac.jejunu.giftrestserver.service.BankService;
@@ -10,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -90,10 +86,6 @@ public class AuthController {
                 put("messages", "account already exists");
             }};
         }
-
-        Map<String, Object> fintechAccount = bankService.accountLookup(accessToken, userSeqNo);
-        System.out.println(fintechAccount.toString());
-
         User user = User.builder()
                 .email(userAddPayload.getEmail())
                 .name(userAddPayload.getName())
@@ -102,8 +94,8 @@ public class AuthController {
                 .scope(userAddPayload.getScope())
                 .refreshToken(refreshToken)
                 .userSeqId(userSeqNo)
+                .testBalance(500000L)
                 .build();
-
         try {
             userService.addUser(user);
         } catch(Exception e) {

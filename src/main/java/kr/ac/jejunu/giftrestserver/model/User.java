@@ -14,7 +14,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "num")
-    private int userId;
+    private Long userId;
     @Column(name="name")
     private String name;
     @Column(name="password")
@@ -27,9 +27,6 @@ public class User {
     private String userSeqId;
     @Column(name="scope")
     private String scope;
-    @Column(columnDefinition = "DEFAULT 500000")
+    @Column(name="test_balance", columnDefinition = "int(11) unsigned DEFAULT 500000")
     private Long testBalance;
-//    @OneToOne
-//    @JoinColumn(name = "userId")
-//    private AccountInfo accountInfo;
 }

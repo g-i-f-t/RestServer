@@ -33,6 +33,6 @@ public class Game {
     private String profileImage;
     @OneToMany
     @JoinColumn(name = "game_id")
-    @JsonIgnoreProperties("game")
+    @JsonIgnoreProperties(value = {"game", "id"})
     private List<GameDescribeImage> gameDescribeImages;
 }
