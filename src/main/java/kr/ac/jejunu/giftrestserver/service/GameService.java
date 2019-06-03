@@ -25,7 +25,9 @@ public class GameService {
         gameRepository.save(game);
     }
 
-    public void updatePrice(Game game, Long fundPrice) {
+    public void updatePrice(Game game, long fundPrice) {
+//        System.out.println(game.getCurrentPrice());
+        System.out.println(fundPrice);
         Long updatedPrice = game.getCurrentPrice() + fundPrice;
         game.setCurrentPrice(updatedPrice);
         gameRepository.save(game);

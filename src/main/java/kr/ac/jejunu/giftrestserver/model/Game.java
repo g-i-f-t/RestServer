@@ -25,8 +25,10 @@ public class Game {
     private Long goalPrice;
     private boolean success;
     private String gameInformation;
-    private String investigationInformation;
-    private String investigationCondition;
+    @Column(name = "investigation_information")
+    private String investmentInformation;
+    @Column(name = "investigation_condition")
+    private String investmentCondition;
     private String companyIntroduction;
     private String profileImage;
     @OneToMany

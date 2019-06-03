@@ -29,4 +29,7 @@ public class User {
     private String scope;
     @Column(columnDefinition = "DEFAULT 500000")
     private Long testBalance;
+//    @OneToOne
+//    @JoinColumn(name = "userId")
+//    private AccountInfo accountInfo;
 }

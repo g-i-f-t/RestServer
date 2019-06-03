@@ -46,6 +46,7 @@ public class AuthController {
         }
         result.put("code", 200);
         result.put("messages", "success");
+        System.out.println(result.toString());
         return result;
     }
 
@@ -89,6 +90,9 @@ public class AuthController {
                 put("messages", "account already exists");
             }};
         }
+
+        Map<String, Object> fintechAccount = bankService.accountLookup(accessToken, userSeqNo);
+        System.out.println(fintechAccount.toString());
 
         User user = User.builder()
                 .email(userAddPayload.getEmail())

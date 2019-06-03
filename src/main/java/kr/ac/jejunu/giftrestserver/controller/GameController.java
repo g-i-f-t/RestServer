@@ -3,6 +3,7 @@ package kr.ac.jejunu.giftrestserver.controller;
 import kr.ac.jejunu.giftrestserver.model.Game;
 import kr.ac.jejunu.giftrestserver.service.GameService;
 import kr.ac.jejunu.giftrestserver.payload.PurchaseTransactionPayload;
+import kr.ac.jejunu.giftrestserver.service.GameTransactionService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class GameController {
 
     private final GameService gameService;
+    private final GameTransactionService gameTransactionService;
 
     @GetMapping(value="/game")
 
@@ -65,20 +67,19 @@ public class GameController {
         }};
 
         Game game = gameOptional.get();
-
+        System.out.println(game);
+        System.out.println(pt.getPrice());
         // 사용자가 금액을 요상하게 입력했을 때
-        Long fundPrice = null;
-        try {
-            fundPrice = Long.getLong(pt.getPrice());
-        } catch (Exception e) {
-            return new HashMap<>() {{
-                put("code", 401);
-                put("messages", "Wrong number Input");
-            }};
-        }
 
         // 가격 갱신
-        gameService.updatePrice(game, fundPrice);
+        try {
+            gameService.updatePrice(game, Long.parseLong(pt.getPrice()));
+        } catch (NumberFormatException e) {
+            return new HashMap<>() {{
+                put("code", 401);
+                put("messages", "wrong number input");
+            }};
+        }
 
         Optional<Game> updatedGameOptional = gameService.getGameFromId(id);
         if(updatedGameOptional.isEmpty()) return new HashMap<>() {{
@@ -92,6 +93,7 @@ public class GameController {
             res.put("messages", "transaction failed");
             return res;
         }
+
 
         res.put("code", 200);
         res.put("messages", "transaction succeeded");

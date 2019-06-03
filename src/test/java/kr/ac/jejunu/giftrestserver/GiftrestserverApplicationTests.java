@@ -24,7 +24,7 @@ public class GiftrestserverApplicationTests {
 
     @Test
     public void bankTest() {
-        BankService test = new BankService();
+//        BankService test = new BankService();
 //        String t = test.addUser();
 //        System.out.println(t);
     }

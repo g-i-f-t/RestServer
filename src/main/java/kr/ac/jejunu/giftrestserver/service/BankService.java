@@ -1,9 +1,11 @@
 package kr.ac.jejunu.giftrestserver.service;
 
 import kr.ac.jejunu.giftrestserver.ClientKey;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -14,13 +16,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-@Component
+@Service
+@RequiredArgsConstructor
 public class BankService {
 
     private static final String HOST = "https://testapi.open-platform.or.kr";
-
-    @Autowired
-    ClientKey clientKey;
+    private final ClientKey clientKey;
 
     public Map<String, Object> updateToken(String refresh_token, String scope) {
         final String uri = "/oauth/2.0/token";
