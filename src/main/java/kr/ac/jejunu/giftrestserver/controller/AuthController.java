@@ -1,48 +1,53 @@
 package kr.ac.jejunu.giftrestserver.controller;
 
-import kr.ac.jejunu.giftrestserver.BankService;
-import kr.ac.jejunu.giftrestserver.dao.AccountDao;
-import kr.ac.jejunu.giftrestserver.dao.UserDao;
-import kr.ac.jejunu.giftrestserver.vo.Account;
-import kr.ac.jejunu.giftrestserver.vo.User;
+import kr.ac.jejunu.giftrestserver.service.BankService;
+import kr.ac.jejunu.giftrestserver.repository.UserDao;
+import kr.ac.jejunu.giftrestserver.model.User;
+import kr.ac.jejunu.giftrestserver.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
-@ResponseBody
+@RestController
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    BankService bankService;
-
-    @Autowired
-    UserDao userdao;
+    private final BankService bankService;
+    private final UserService userService;
 
 
+    /**
+     * 인증용 더미 페이지
+     * @param code
+     * @param scope
+     * @param client_info
+     * @return
+     */
     @GetMapping(value="/auth")
-    public Map<String, String> authUser(@RequestParam String code, @RequestParam String scope, @RequestParam String client_info) {
-        Map<String, String> res = new HashMap<>();
-        res.put("code", code);
-        res.put("scope", scope);
-        res.put("client_info", scope);
-        return res;
+    public String authUser(@RequestParam String code, @RequestParam String scope, @RequestParam String client_info) {
+        return "인증 중입니다.";
     }
 
+    /**
+     * 계정 추가
+     * @param password
+     * @param name
+     * @param email
+     * @param authCode
+     * @param scope
+     * @return
+     */
     @PostMapping(value="/addAccount", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Map<String, Object> addAccount(
-            @RequestBody String id,
             @RequestBody String password,
             @RequestBody String name,
-            @RequestBody String birthGender,
             @RequestBody String email,
             @RequestBody String authCode,
             @RequestBody String scope) {
-//        new AccountDao().addAccount(account);
 
         Map<String, Object> tokenRes = bankService.getToken(authCode);
 
@@ -50,31 +55,29 @@ public class AuthController {
         final String refreshToken = (String) tokenRes.get("refresh_token");
         final String userSeqNo = (String) tokenRes.get("user_seq_no");
 
-        User user = new User();
-
-        user.setId(id);
-        user.setPassword(password);
-        user.setName(name);
-        user.setBirthGender(birthGender);
-        user.setEmail(email);
-        user.setScope(scope);
-        user.setRefreshToken(refreshToken);
-        user.setUserSeqId(userSeqNo);
-
-        Map<String, Object> res = new HashMap<>();
-
+        User user = User.builder()
+                .email(email)
+                .name(name)
+                .password(password)
+                .email(email)
+                .scope(scope)
+                .refreshToken(refreshToken)
+                .userSeqId(userSeqNo)
+                .build();
         try {
-            userdao.createUser(user);
+            userService.addUser(user);
         } catch(Exception e) {
-            res.put("code", 400);
-            res.put("messages", "add failed");
+            return new HashMap<>() {{
+                put("code", 400);
+                put("messages", "add failed");
+            }};
         }
 
-
-        res.put("code", 200);
-        res.put("messages", "success");
-        res.put("access_token", accessToken);
-        res.put("user_seq_no", userSeqNo);
-        return res;
+        return new HashMap<>() {{
+            put("code", 200);
+            put("messages", "success");
+            put("access_token", accessToken);
+            put("user_seq_no", userSeqNo);
+        }};
     }
 }

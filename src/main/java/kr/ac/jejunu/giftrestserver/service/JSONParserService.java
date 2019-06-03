@@ -1,4 +1,4 @@
-package kr.ac.jejunu.giftrestserver;
+package kr.ac.jejunu.giftrestserver.service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,7 +10,7 @@ import org.springframework.util.MultiValueMap;
 import java.io.IOException;
 import java.util.Map;
 
-public class JSONParser {
+public class JSONParserService {
     static Map<String, Object> parse(String result) {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = null;

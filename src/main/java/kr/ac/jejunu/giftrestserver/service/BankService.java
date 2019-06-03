@@ -1,16 +1,11 @@
-package kr.ac.jejunu.giftrestserver;
+package kr.ac.jejunu.giftrestserver.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.ac.jejunu.giftrestserver.ClientKey;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.SimpleDateFormat;
@@ -42,7 +37,7 @@ public class BankService {
         parameters.add("scope", scope);
         parameters.add("grant_type", "refresh_token");
 
-        return HttpConnection.post(HOST + uri, headers, parameters);
+        return HttpConnectionService.post(HOST + uri, headers, parameters);
     }
 
     public Map<String, Object> userLookup(String access_token, String user_seq_no) {
@@ -52,7 +47,7 @@ public class BankService {
 
         UriComponentsBuilder parameters = UriComponentsBuilder.fromHttpUrl(HOST + url)
                 .queryParam("user_seq_no", user_seq_no);
-        return HttpConnection.get(headers, parameters);
+        return HttpConnectionService.get(headers, parameters);
     }
 
     public Map<String, Object> accountLookup(String access_token, String user_seq_no) {
@@ -65,7 +60,7 @@ public class BankService {
                 .queryParam("include_cancel_yn", "Y")
                 .queryParam("sort_order", "A");
 
-        return HttpConnection.get(headers, parameters);
+        return HttpConnectionService.get(headers, parameters);
     }
 
     public Map<String, Object> addUser() {
@@ -82,7 +77,7 @@ public class BankService {
             .queryParam("client_info", "test")
             .queryParam("auth_type", "0");
 
-        return HttpConnection.get(headers, parameters);
+        return HttpConnectionService.get(headers, parameters);
     }
 
     public Map<String, Object> getToken(String code) {
@@ -100,7 +95,7 @@ public class BankService {
         parameters.add("redirect_uri", clientKey.getREDIRECT_URI());
         parameters.add("grant_type", "authorization_code");
 
-        return HttpConnection.post(HOST + uri, headers, parameters);
+        return HttpConnectionService.post(HOST + uri, headers, parameters);
     }
 
     public Map<String, Object> withDraw(String content, String amount, String access_token, String fintech_use_num) {
@@ -122,7 +117,7 @@ public class BankService {
         parameters.put("tran_amt", amount);
         parameters.put("tran_dtime", dTime);
 
-        return HttpConnection.postJson(HOST + url, headers, parameters);
+        return HttpConnectionService.postJson(HOST + url, headers, parameters);
     }
 
 

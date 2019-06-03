@@ -1,4 +1,4 @@
-package kr.ac.jejunu.giftrestserver.vo;
+package kr.ac.jejunu.giftrestserver.model;
 
 import lombok.Data;
 

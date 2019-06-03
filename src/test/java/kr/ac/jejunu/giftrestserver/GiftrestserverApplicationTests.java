@@ -1,7 +1,6 @@
 package kr.ac.jejunu.giftrestserver;
 
-import kr.ac.jejunu.giftrestserver.vo.Account;
-import org.junit.Before;
+import kr.ac.jejunu.giftrestserver.service.BankService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,19 +29,19 @@ public class GiftrestserverApplicationTests {
 //        System.out.println(t);
     }
 
-    @Test
-    public void inquiryTest() {
-        Account account = new Account();
-        account.setCode("2b82b2df-4800-4297-b1fe-352f2d8ca28a");
-        account.setScope("login inquiry transfer");
-        account.setClientInfo("test");
-
-        BankService test = new BankService();
-        Map<String, Object> res = test.getToken(account.getCode());
-        System.out.println(res.toString());
-        // {access_token=a46db938-aa13-4266-b11c-58c19d153063, token_type=Bearer, expires_in=7776000, refresh_token=d51cdf12-a7fb-4838-860d-e643e77a0134, scope=login inquiry transfer, user_seq_no=1100034971}
-        // Todo 처음 인증 코드받으면 가입할때 client_info(아이디)에 적힌 튜플에 refresh_token과 user_seq_no 삽입.
-    }
+//    @Test
+//    public void inquiryTest() {
+//        Account account = new Account();
+//        account.setCode("2b82b2df-4800-4297-b1fe-352f2d8ca28a");
+//        account.setScope("login inquiry transfer");
+//        account.setClientInfo("test");
+//
+//        BankService test = new BankService();
+//        Map<String, Object> res = test.getToken(account.getCode());
+//        System.out.println(res.toString());
+//        // {access_token=a46db938-aa13-4266-b11c-58c19d153063, token_type=Bearer, expires_in=7776000, refresh_token=d51cdf12-a7fb-4838-860d-e643e77a0134, scope=login inquiry transfer, user_seq_no=1100034971}
+//        // Todo 처음 인증 코드받으면 가입할때 client_info(아이디)에 적힌 튜플에 refresh_token과 user_seq_no 삽입.
+//    }
 
     @Test
     public void updateToken() {

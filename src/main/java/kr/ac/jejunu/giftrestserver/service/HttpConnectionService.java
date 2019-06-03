@@ -1,7 +1,5 @@
-package kr.ac.jejunu.giftrestserver;
+package kr.ac.jejunu.giftrestserver.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,7 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
 
-public class HttpConnection {
+public class HttpConnectionService {
     public static Map<String, Object> post(String uri, HttpHeaders headers, MultiValueMap<String, String> parameters) {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(parameters, headers);
         RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
@@ -22,7 +20,7 @@ public class HttpConnection {
 
         Map<String, Object> map = null;
 
-        return JSONParser.parse(result);
+        return JSONParserService.parse(result);
     }
 
     public static Map<String, Object> get(HttpHeaders headers, UriComponentsBuilder parameters) {
@@ -34,17 +32,17 @@ public class HttpConnection {
 
         Map<String, Object> map = null;
 
-        return JSONParser.parse(response.getBody());
+        return JSONParserService.parse(response.getBody());
     }
 
     public static Map<String, Object> postJson(String url, HttpHeaders headers, Map<String, String> parameters) {
-        String json = JSONParser.stringify(parameters);
+        String json = JSONParserService.stringify(parameters);
         System.out.println(json);
         RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 
         HttpEntity<String> request = new HttpEntity<String>(json, headers);
         String answer = restTemplate.postForObject(url, request, String.class);
 
-        return JSONParser.parse(answer);
+        return JSONParserService.parse(answer);
     }
 }

@@ -1,6 +1,6 @@
-package kr.ac.jejunu.giftrestserver.dao;
+package kr.ac.jejunu.giftrestserver.repository;
 
-import kr.ac.jejunu.giftrestserver.vo.User;
+import kr.ac.jejunu.giftrestserver.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,23 +12,23 @@ public class UserDao {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    public int createUser(User user) {
-        // Todo
-        String sql = "INSERT INTO user_info (id, password, name, birth_gender, email, scope, refresh_token, user_seq_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        Object[] params = new Object[]
-                {
-                user.getId(),
-                user.getPassword(),
-                user.getName(),
-                user.getBirthGender(),
-                user.getEmail(),
-                user.getScope(),
-                user.getRefreshToken(),
-                user.getUserSeqId()
-        };
-
-        return jdbcTemplate.update(sql, params);
-    }
+//    public int createUser(User user) {
+//        // Todo
+//        String sql = "INSERT INTO user_info (id, password, name, birth_gender, email, scope, refresh_token, user_seq_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+//        Object[] params = new Object[]
+//                {
+//                user.getId(),
+//                user.getPassword(),
+//                user.getName(),
+//                user.getBirthGender(),
+//                user.getEmail(),
+//                user.getScope(),
+//                user.getRefreshToken(),
+//                user.getUserSeqId()
+//        };
+//
+//        return jdbcTemplate.update(sql, params);
+//    }
 
     /**
      * readUser

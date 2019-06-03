@@ -1,6 +1,6 @@
-package kr.ac.jejunu.giftrestserver.dao;
+package kr.ac.jejunu.giftrestserver.repository;
 
-import kr.ac.jejunu.giftrestserver.vo.Account;
+import kr.ac.jejunu.giftrestserver.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
