@@ -12,17 +12,17 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity(name = "game_info")
-public class Game extends GameMinify {
+public class Game {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "game_id")
-    private int gameId;
+    private Long gameId;
     private String name;
     private String developer;
     private String category;
-    private int currentPrice;
-    private int goalPrice;
+    private Long currentPrice;
+    private Long goalPrice;
     private boolean success;
     private String gameInformation;
     private String investigationInformation;

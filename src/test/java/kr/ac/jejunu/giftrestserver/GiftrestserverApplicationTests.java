@@ -31,7 +31,7 @@ public class GiftrestserverApplicationTests {
 
 //    @Test
 //    public void inquiryTest() {
-//        Account account = new Account();
+//        AccountPayload account = new AccountPayload();
 //        account.setCode("2b82b2df-4800-4297-b1fe-352f2d8ca28a");
 //        account.setScope("login inquiry transfer");
 //        account.setClientInfo("test");
@@ -87,4 +87,6 @@ public class GiftrestserverApplicationTests {
         final Map<String, Object> transaction = bankService.withDraw(log, amount, access_token, fintech_use_num);
         System.out.println(transaction.toString());
     }
+
+
 }

@@ -1,16 +1,19 @@
 package kr.ac.jejunu.giftrestserver.controller;
 
-import kr.ac.jejunu.giftrestserver.service.BankService;
-import kr.ac.jejunu.giftrestserver.repository.UserDao;
 import kr.ac.jejunu.giftrestserver.model.User;
+import kr.ac.jejunu.giftrestserver.payload.RefreshPayload;
+import kr.ac.jejunu.giftrestserver.payload.UserAddPayload;
+import kr.ac.jejunu.giftrestserver.payload.ValidatePayload;
+import kr.ac.jejunu.giftrestserver.service.BankService;
 import kr.ac.jejunu.giftrestserver.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,8 +21,6 @@ public class AuthController {
 
     private final BankService bankService;
     private final UserService userService;
-
-
     /**
      * 인증용 더미 페이지
      * @param code
@@ -32,38 +33,73 @@ public class AuthController {
         return "인증 중입니다.";
     }
 
+    @PostMapping(value="/validateAccount")
+    public Map<String, Object> validateAccount(@RequestBody ValidatePayload account) {
+        Map<String, Object> result = null;
+        try {
+            result = userService.authUser(account);
+        } catch (NoSuchElementException e) {
+            return new HashMap<>() {{
+                put("code", 400);
+                put("messages", "couldn't find account");
+            }};
+        }
+        result.put("code", 200);
+        result.put("messages", "success");
+        return result;
+    }
+
+    @GetMapping(value="/account/{user_seq_id}")
+    public Map<String, Object> getAccountFromUserSeqId(@PathVariable("user_seq_id") String userSeqId) {
+
+        Optional<User> user = userService.getAccountFromUserSeqId(userSeqId);
+        if(user.isEmpty()) {
+            return new HashMap<>() {{
+                put("code", 400);
+                put("messages", "account not founded");
+            }};
+        }
+
+        return new HashMap<>() {{
+            put("code", 200);
+            put("messages", "success");
+            put("name", user.get().getName());
+            put("email", user.get().getEmail());
+        }};
+    }
+
     /**
      * 계정 추가
-     * @param password
-     * @param name
-     * @param email
-     * @param authCode
-     * @param scope
+     * @param userAddPayload
      * @return
      */
     @PostMapping(value="/addAccount", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Map<String, Object> addAccount(
-            @RequestBody String password,
-            @RequestBody String name,
-            @RequestBody String email,
-            @RequestBody String authCode,
-            @RequestBody String scope) {
+    public Map<String, Object> addAccount(@RequestBody UserAddPayload userAddPayload) {
 
-        Map<String, Object> tokenRes = bankService.getToken(authCode);
+        Map<String, Object> tokenRes = bankService.getToken(userAddPayload.getAuthCode());
 
         final String accessToken = (String) tokenRes.get("access_token");
         final String refreshToken = (String) tokenRes.get("refresh_token");
         final String userSeqNo = (String) tokenRes.get("user_seq_no");
 
+        Optional<User> existsUserOptional = userService.getAccountFromUserSeqId(userSeqNo);
+        if(existsUserOptional.isPresent()) {
+            return new HashMap<>() {{
+                put("code", 401);
+                put("messages", "account already exists");
+            }};
+        }
+
         User user = User.builder()
-                .email(email)
-                .name(name)
-                .password(password)
-                .email(email)
-                .scope(scope)
+                .email(userAddPayload.getEmail())
+                .name(userAddPayload.getName())
+                .password(userAddPayload.getPassword())
+                .email(userAddPayload.getEmail())
+                .scope(userAddPayload.getScope())
                 .refreshToken(refreshToken)
                 .userSeqId(userSeqNo)
                 .build();
+
         try {
             userService.addUser(user);
         } catch(Exception e) {
