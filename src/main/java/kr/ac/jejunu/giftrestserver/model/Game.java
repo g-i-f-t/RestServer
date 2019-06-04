@@ -1,5 +1,6 @@
 package kr.ac.jejunu.giftrestserver.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -19,7 +20,6 @@ public class Game {
     @Column(name = "game_id")
     private Long gameId;
     private String name;
-    private String developer;
     private String category;
     private Long currentPrice;
     private Long goalPrice;
@@ -35,4 +35,8 @@ public class Game {
     @JoinColumn(name = "game_id")
     @JsonIgnoreProperties(value = {"game", "id"})
     private List<GameDescribeImage> gameDescribeImages;
+    @ManyToOne
+    @JoinColumn(name = "developer_id")
+    @JsonIgnoreProperties(value = {"password", "email", "refresh_token", "scope", "user_seq_id", "id"})
+    private Developer developer;
 }

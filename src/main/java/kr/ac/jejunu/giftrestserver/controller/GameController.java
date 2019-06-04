@@ -6,8 +6,10 @@ import kr.ac.jejunu.giftrestserver.payload.PurchaseTransactionPayload;
 import kr.ac.jejunu.giftrestserver.service.GameTransactionService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +26,7 @@ public class GameController {
 
     public Map<String, Object> getGameList(@RequestParam String list) {
         Map<String, Object> res = new HashMap<>();
-        Collection<Game> collection = gameService.getAll();
+        Collection<Game> collection;
         switch(list) {
             case "available":
                 collection = gameService.getAll();
@@ -100,14 +102,13 @@ public class GameController {
         return res;
     }
 
-    @PutMapping(value="/game/insert")
+    @PostMapping(value="/game/insert", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Map<String, Object> insertGame(@RequestBody Game game) {
         gameService.insertGame(game);
+        System.out.println(game.getInvestmentInformation());
         Map<String, Object> res = new HashMap<>();
         res.put("code", 200);
         res.put("message", "Successfully added");
         return res;
     }
-
-
 }

@@ -1,5 +1,6 @@
 package kr.ac.jejunu.giftrestserver.controller;
 
+import kr.ac.jejunu.giftrestserver.exception.GiftException;
 import kr.ac.jejunu.giftrestserver.model.User;
 import kr.ac.jejunu.giftrestserver.payload.UserAddPayload;
 import kr.ac.jejunu.giftrestserver.payload.ValidatePayload;
@@ -34,20 +35,20 @@ public class AuthController {
         Map<String, Object> result = null;
         try {
             result = userService.authUser(account);
-        } catch (NoSuchElementException e) {
+            result.put("code", 200);
+            result.put("messages", "success");
+        } catch (GiftException e) {
             return new HashMap<>() {{
-                put("code", 400);
-                put("messages", "couldn't find account");
+                put("code", e.getErrCode());
+                put("messages", e.getMessage());
             }};
         }
-        result.put("code", 200);
-        result.put("messages", "success");
-        System.out.println(result.toString());
         return result;
     }
 
     @GetMapping(value="/account/{user_seq_id}")
     public Map<String, Object> getAccountFromUserSeqId(@PathVariable("user_seq_id") String userSeqId) {
+
 
         Optional<User> user = userService.getAccountFromUserSeqId(userSeqId);
         if(user.isEmpty()) {
