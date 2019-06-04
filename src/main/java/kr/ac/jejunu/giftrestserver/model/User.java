@@ -3,6 +3,7 @@ package kr.ac.jejunu.giftrestserver.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -10,10 +11,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "user_info")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "num")
+    @Setter(AccessLevel.NONE)
     private Long userId;
     @Column(name="name")
     private String name;

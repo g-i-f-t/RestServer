@@ -1,6 +1,10 @@
 package kr.ac.jejunu.giftrestserver.controller;
 
+import kr.ac.jejunu.giftrestserver.exception.GiftException;
+import kr.ac.jejunu.giftrestserver.model.Developer;
 import kr.ac.jejunu.giftrestserver.model.Game;
+import kr.ac.jejunu.giftrestserver.payload.GamePayLoad;
+import kr.ac.jejunu.giftrestserver.service.DeveloperService;
 import kr.ac.jejunu.giftrestserver.service.GameService;
 import kr.ac.jejunu.giftrestserver.payload.PurchaseTransactionPayload;
 import kr.ac.jejunu.giftrestserver.service.GameTransactionService;
@@ -19,6 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GameController {
 
+    private final DeveloperService developerService;
     private final GameService gameService;
     private final GameTransactionService gameTransactionService;
 
@@ -103,12 +108,16 @@ public class GameController {
     }
 
     @PostMapping(value="/game/insert", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Map<String, Object> insertGame(@RequestBody Game game) {
-        gameService.insertGame(game);
-        System.out.println(game.getInvestmentInformation());
+    public Map<String, Object> insertGame(@RequestBody GamePayLoad gamePayLoad) {
         Map<String, Object> res = new HashMap<>();
-        res.put("code", 200);
-        res.put("message", "Successfully added");
+        try {
+            gameService.insertGame(gamePayLoad);
+            res.put("code", 200);
+            res.put("message", "Successfully added");
+        } catch (GiftException e) {
+            res.put("code", e.getErrCode());
+            res.put("messages", e.getMessage());
+        }
         return res;
     }
 }

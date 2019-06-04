@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -13,12 +15,12 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity(name = "game_info")
-public class Game {
+public class Game implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "game_id")
-    private Long gameId;
+    @Setter(AccessLevel.NONE)
+    private Long id;
     private String name;
     private String category;
     private Long currentPrice;
@@ -31,7 +33,7 @@ public class Game {
     private String investmentCondition;
     private String companyIntroduction;
     private String profileImage;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
     @JsonIgnoreProperties(value = {"game", "id"})
     private List<GameDescribeImage> gameDescribeImages;
