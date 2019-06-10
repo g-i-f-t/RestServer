@@ -8,16 +8,13 @@ import kr.ac.jejunu.giftrestserver.service.DeveloperService;
 import kr.ac.jejunu.giftrestserver.service.GameService;
 import kr.ac.jejunu.giftrestserver.payload.PurchaseTransactionPayload;
 import kr.ac.jejunu.giftrestserver.service.GameTransactionService;
+import kr.ac.jejunu.giftrestserver.service.PayInfoService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +22,7 @@ public class GameController {
 
     private final DeveloperService developerService;
     private final GameService gameService;
-    private final GameTransactionService gameTransactionService;
-
+    private final PayInfoService payInfoService;
     @GetMapping(value="/game")
 
     public Map<String, Object> getGameList(@RequestParam String list) {
@@ -34,10 +30,10 @@ public class GameController {
         Collection<Game> collection;
         switch(list) {
             case "available":
-                collection = gameService.getAll();
+                collection = gameService.getAllBySuccess(false);
                 break;
             case "done":
-                collection = gameService.getAll();
+                collection = gameService.getAllBySuccess(true);
                 break;
             default:
                 res.put("code", 400);
@@ -119,5 +115,33 @@ public class GameController {
             res.put("messages", e.getMessage());
         }
         return res;
+    }
+
+    @GetMapping(value="/game/category")
+    public Map<String, Object> getAllCategory() {
+        return new HashMap<>() {{
+            put("data", gameService.getAllCategory());
+            put("code", 200);
+            put("messages", "success");
+        }};
+    }
+
+    @GetMapping(value="/game/category/{category}")
+    public Map<String, Object> findGameFromCategory(@PathVariable String category) {
+        List<Game> gameList = gameService.getGameListFromCategory(category);
+        return new HashMap<>() {{
+            put("code", 200);
+            put("messages", "success");
+            put("data", gameList);
+        }};
+    }
+
+    @GetMapping(value="/game/lookup/{gameId}")
+    public Map<String, Object> hasPurchased(@PathVariable Long gameId) {
+        return new HashMap<>() {{
+            put("code", 200);
+            put("messages", "success");
+            put("data", payInfoService.hasTransaction(gameId));
+        }};
     }
 }

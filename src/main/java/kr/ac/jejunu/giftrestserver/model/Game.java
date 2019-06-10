@@ -14,7 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "game_info")
+@Entity
+@Table(name = "game_info")
 public class Game implements Serializable {
 
     @Id

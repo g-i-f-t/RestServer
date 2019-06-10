@@ -12,10 +12,7 @@ import kr.ac.jejunu.giftrestserver.vo.ResponseVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,9 +26,7 @@ public class BankController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseVO getBankList(@RequestBody BankPayLoad bankPayLoad) {
-        System.out.println(bankPayLoad.getAccessToken() + ", " + bankPayLoad.getUserSeqId());
         Map<String, Object> account = bankService.accountLookup(bankPayLoad.getAccessToken(), bankPayLoad.getUserSeqId());
-        System.out.println(account.toString());
 
         return ResponseVO.builder()
                 .code(200)

@@ -69,6 +69,7 @@ public class DeveloperService {
 
     private String refreshDeveloperToken(Developer developer) {
         Map<String, Object> response = bankService.updateToken(developer.getRefreshToken(), developer.getScope());
+        System.out.println(response.toString());
         String accessToken = (String) response.get("access_token");
         String refreshToken = (String) response.get("refresh_token");
         developer.setRefreshToken(refreshToken);

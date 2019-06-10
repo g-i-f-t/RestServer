@@ -8,10 +8,7 @@ import kr.ac.jejunu.giftrestserver.repository.GameRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +41,17 @@ public class GameService {
         Long updatedPrice = game.getCurrentPrice() + fundPrice;
         game.setCurrentPrice(updatedPrice);
         gameRepository.save(game);
+    }
+
+    public List<String> getAllCategory() {
+        return gameRepository.findAllCategory();
+    }
+
+    public Collection<Game> getAllBySuccess(boolean b) {
+        return gameRepository.findAllBySuccess(b);
+    }
+
+    public List<Game> getGameListFromCategory(String category) {
+        return gameRepository.findAllByCategory(category);
     }
 }
