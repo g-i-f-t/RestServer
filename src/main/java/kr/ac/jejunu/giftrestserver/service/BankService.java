@@ -1,6 +1,7 @@
 package kr.ac.jejunu.giftrestserver.service;
 
 import kr.ac.jejunu.giftrestserver.ClientKey;
+import kr.ac.jejunu.giftrestserver.exception.GiftException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -106,14 +107,13 @@ public class BankService {
         Date currentTime = new Date();
         String dTime = dFormat.format(currentTime);
 
-        System.out.println(dTime);
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.add("Authorization", "Bearer " + access_token);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("dps_print_content", content);
+        parameters.put("dps_print_content", "G-I-F-T테스트");
+        parameters.put("print_content", content);
         parameters.put("fintech_use_num", fintech_use_num);
         parameters.put("tran_amt", amount);
         parameters.put("tran_dtime", dTime);
