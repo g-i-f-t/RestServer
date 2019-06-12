@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -103,6 +104,10 @@ public class GameController {
         return res;
     }
 
+    @PostMapping(value="/game/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void imageTest(@RequestPart MultipartFile file) {
+        System.out.println(file.getName());
+    }
     @PostMapping(value="/game/insert", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Map<String, Object> insertGame(@RequestBody GamePayLoad gamePayLoad) {
         Map<String, Object> res = new HashMap<>();
@@ -142,6 +147,33 @@ public class GameController {
             put("code", 200);
             put("messages", "success");
             put("data", payInfoService.hasTransaction(gameId));
+        }};
+    }
+
+    @GetMapping(value="/game/my/{userSeqId}")
+    public Map<String, Object> findGameFromUserSeqId(@PathVariable String userSeqId) {
+        return new HashMap<>() {{
+            put("code", 200);
+            put("messages", "success");
+            put("data", gameService.findAllByuserSeqId(userSeqId));
+        }};
+    }
+
+    @GetMapping(value="/game/developer/{userSeqId}")
+    public Map<String, Object> findGameFromDeveloperUserSeqId(@PathVariable String userSeqId) {
+        return new HashMap<>() {{
+            put("code", 200);
+            put("messages", "success");
+            put("data", gameService.findAllByDeveloperUserSeqId(userSeqId));
+        }};
+    }
+
+    @GetMapping(value="/game/hot")
+    public Map<String, Object> findHotGame() {
+        return new HashMap<>() {{
+            put("code", 200);
+            put("messages", "success");
+            put("data", gameService.findHotGame());
         }};
     }
 }

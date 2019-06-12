@@ -14,4 +14,13 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     List<String> findAllCategory();
     Collection<Game> findAllBySuccess(boolean b);
     List<Game> findAllByCategory(String category);
+
+    @Query(value ="UPDATE Game g SET g.currentPrice = current_price")
+    void incrementPrice(Long price, Long gameId);
+
+    @Query(value = "SELECT * FROM game_info ORDER BY current_price / goal_price DESC LIMIT 1", nativeQuery = true)
+    Optional<Game> findHotGame();
+
+    @Query("SELECT g FROM Game g WHERE g.developer.userSeqId = :userSeqId")
+    List<Game> findAllByDeveloperUserSeqId(@Param("userSeqId") String userSeqId);
 }

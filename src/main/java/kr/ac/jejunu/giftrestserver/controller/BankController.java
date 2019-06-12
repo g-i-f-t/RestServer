@@ -23,6 +23,7 @@ import java.util.Map;
 public class BankController {
     private final BankService bankService;
     private final PayInfoService payInfoService;
+    private final GameService gameService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseVO getBankList(@RequestBody BankPayLoad bankPayLoad) {
@@ -38,7 +39,7 @@ public class BankController {
     @PostMapping(path="/withdraw", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Map<String, Object> withDrawtest(@RequestBody WithDrawPayLoad withDrawPayLoad) {
         payInfoService.addTransaction(withDrawPayLoad);
-
+        gameService.incrementPrice(withDrawPayLoad.getPrice(), withDrawPayLoad.getGameId());
         // 테스트 베드에서 작동 안됨
 //        String testAccessToken = "f45f904a-c37e-4fb1-a9c9-2c74219f184c";
 //        String testFintechNum = "101600000169321934052424";

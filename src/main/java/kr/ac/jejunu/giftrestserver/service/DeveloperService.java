@@ -2,6 +2,7 @@ package kr.ac.jejunu.giftrestserver.service;
 
 import kr.ac.jejunu.giftrestserver.exception.GiftException;
 import kr.ac.jejunu.giftrestserver.model.Developer;
+import kr.ac.jejunu.giftrestserver.model.User;
 import kr.ac.jejunu.giftrestserver.payload.DeveloperPayload;
 import kr.ac.jejunu.giftrestserver.payload.ValidatePayload;
 import kr.ac.jejunu.giftrestserver.repository.DeveloperRepository;
